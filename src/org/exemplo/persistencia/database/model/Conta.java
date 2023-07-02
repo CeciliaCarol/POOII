@@ -21,6 +21,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.exemplo.persistencia.database.dao.IEntityDAO;
+import org.exemplo.persistencia.database.dao.RegistroTransacaoDAO;
+import org.exemplo.persistencia.database.db.ConexaoBancoHibernate;
 import org.exemplo.persistencia.database.enumeration.TipoConta;
 import org.exemplo.persistencia.database.enumeration.TipoTransacao;
 
@@ -54,13 +57,18 @@ public class Conta {
 	
 
 	
-	public Conta() {
+	public Conta(Integer numeroconta, BigDecimal saldo, LocalDateTime dataAbertura, Boolean status) {
 		this.numeroconta = new Random().nextInt(999999999);
 		this.saldo = BigDecimal.ZERO;
 		saldo.setScale(4, RoundingMode.HALF_UP);
 		this.dataAbertura = LocalDateTime.now();
 		this.status = true;
 		transacoes = new ArrayList<>();
+	}
+
+
+	public Conta() {
+		// TODO Auto-generated constructor stub
 	}
 
 
@@ -167,11 +175,10 @@ public class Conta {
 	}
 
 
-	public void depositar(BigDecimal quantia) {
+	public void depositar(BigDecimal quantia) { 
 		if (status) {
 			if (quantia.compareTo(BigDecimal.ZERO) > 0) {
 	            this.saldo = this.saldo.add(quantia);
-	            transacoes.add(new RegistroTransacao(quantia, TipoTransacao.CREDITO, LocalDateTime.now()));
 	            System.out.println("Deposito realizado com sucesso!");
 			} else {
 				System.out.println("Valor invalido para deposito");

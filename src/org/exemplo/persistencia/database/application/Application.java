@@ -2,6 +2,7 @@ package org.exemplo.persistencia.database.application;
 
 import org.exemplo.persistencia.database.dao.ContaDAO;
 import org.exemplo.persistencia.database.dao.IEntityDAO;
+import org.exemplo.persistencia.database.dao.RegistroTransacaoDAO;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.util.Scanner;
 import org.exemplo.persistencia.database.dao.ClienteDAO;
 import org.exemplo.persistencia.database.db.ConexaoBancoHibernate;
 import org.exemplo.persistencia.database.enumeration.TipoConta;
+import org.exemplo.persistencia.database.enumeration.TipoTransacao;
 import org.exemplo.persistencia.database.model.Conta;
 import org.exemplo.persistencia.database.model.RegistroTransacao;
 import org.exemplo.persistencia.database.model.Cliente;
@@ -205,12 +207,19 @@ public class Application {
 									}
 									if (contaSelecionada != null) {
 										System.out.println("Digite o valor do depósito:");
-										double quantia = 0.0;
+										double quantia = scanner.nextDouble();
+										scanner.nextLine();
+										
 										contaSelecionada.depositar(new BigDecimal(quantia));
+										
+										IEntityDAO<RegistroTransacao> TransacaoDAO = new RegistroTransacaoDAO(new ConexaoBancoHibernate()); 
+										RegistroTransacao transacao = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.CREDITO, LocalDateTime.now());
+										transacao.setConta(contaSelecionada);
+										
 										
 										IEntityDAO<Conta> Condao = new ContaDAO(new ConexaoBancoHibernate());
 										Condao.update(contaSelecionada);
-										
+										TransacaoDAO.save(transacao);
 										System.out.println("Depósito realizado com sucesso!");
 									} else {
 										System.out.println("Conta não encontrada;");
@@ -254,7 +263,8 @@ public class Application {
 									}
 									if (contaSelecionada != null) {
 										System.out.println("Digite o valor do saque:");
-										double quantia = 0.0;
+										double quantia = scanner.nextDouble();
+										scanner.nextLine();
 										contaSelecionada.sacar(new BigDecimal(quantia));
 										
 										IEntityDAO<Conta> Condao = new ContaDAO(new ConexaoBancoHibernate());
@@ -346,7 +356,7 @@ public class Application {
 								IEntityDAO<Conta> Condao = new ContaDAO(new ConexaoBancoHibernate());
 								Conta conta = Condao.findById(numeroConta);
 								
-								if (conta != null && conta.getCliente().equals(cliente)) {
+								if (conta != null) {
 									
 									List<RegistroTransacao> transacoes = conta.getTransacoes();
 									if (transacoes.isEmpty()) {

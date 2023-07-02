@@ -40,8 +40,11 @@ public class RegistroTransacao  implements Serializable{
 	@JoinColumn(name = "conta_id")
 	private Conta conta;
 	
+	public RegistroTransacao() {
+		
+	}
+	
 	public RegistroTransacao(BigDecimal valor, TipoTransacao tipo, LocalDateTime data) {
-		this.id = new Random().nextInt(999999999);
 		this.valor = valor;
 		this.tipo = tipo;
 		this.data = data;
@@ -100,6 +103,18 @@ public class RegistroTransacao  implements Serializable{
 	@Override
 	public String toString() {
 		return "RegistroTransacao [id=" + id + ", valor=" + valor + ", tipo=" + tipo + ", data=" + data + "]";
+	}
+
+	
+
+	public void setConta(int numeroConta) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setConta(Conta conta) {
+		this.conta = conta;
+		
 	}
 	
 }
