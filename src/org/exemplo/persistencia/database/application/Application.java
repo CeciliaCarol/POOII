@@ -6,6 +6,7 @@ import org.exemplo.persistencia.database.dao.RegistroTransacaoDAO;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -101,11 +102,12 @@ public class Application {
 						
 							try {
 								IEntityDAO<Conta> Condao = new ContaDAO(new ConexaoBancoHibernate());
-						        IEntityDAO<Cliente> Clidao1 = new ClienteDAO(new ConexaoBancoHibernate());
+						        
 								
 								Conta conta = new Conta();
-								conta.setNumeroconta(new Random().nextInt(999999999));						
+								conta.setDataAbertura(LocalDateTime.now());						
 								conta.setSaldo(BigDecimal.ZERO);
+								conta.setStatus(true);
 								conta.setTipoConta(TipoConta.POUPANCA);
 								
 								conta.setCliente(cliente);
@@ -213,7 +215,7 @@ public class Application {
 										contaSelecionada.depositar(new BigDecimal(quantia));
 										
 										IEntityDAO<RegistroTransacao> TransacaoDAO = new RegistroTransacaoDAO(new ConexaoBancoHibernate()); 
-										RegistroTransacao transacao = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.CREDITO, LocalDateTime.now());
+										RegistroTransacao transacao = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.CREDITO, YearMonth.now());
 										transacao.setConta(contaSelecionada);
 										
 										
@@ -267,8 +269,13 @@ public class Application {
 										scanner.nextLine();
 										contaSelecionada.sacar(new BigDecimal(quantia));
 										
+										IEntityDAO<RegistroTransacao> TransacaoDAO = new RegistroTransacaoDAO(new ConexaoBancoHibernate()); 
+										RegistroTransacao transacao = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.CREDITO, YearMonth.now());
+										transacao.setConta(contaSelecionada);
+										
 										IEntityDAO<Conta> Condao = new ContaDAO(new ConexaoBancoHibernate());
 										Condao.update(contaSelecionada);
+										TransacaoDAO.save(transacao);
 										
 										System.out.println("Saque realizado com sucesso");
 									} else {
@@ -315,8 +322,15 @@ public class Application {
 							        	scanner.nextLine();
 							        	
 							        	contaOrigem.transferir(contaDestino, new BigDecimal(quantia));
+							        	
+							        	IEntityDAO<RegistroTransacao> TransacaoDAO = new RegistroTransacaoDAO(new ConexaoBancoHibernate()); 
+										RegistroTransacao transacao = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.CREDITO, YearMonth.now());
+										transacao.setConta(contaOrigem);
+							        	transacao.setConta(contaDestino);
+										
 							        	Condao.update(contaOrigem);
 							        	Condao.update(contaDestino);
+							        	TransacaoDAO.save(transacao);
 							        	
 							        	System.out.println("Transferencia realizada com sucesso");
 							        	
@@ -408,10 +422,11 @@ public class Application {
 								IEntityDAO<Conta> Condao = new ContaDAO(new ConexaoBancoHibernate());
 								Conta conta = Condao.findById(numeroConta);
 								
-								if (conta != null && conta.getCliente().equals(cliente)) {
+								if (conta != null) {
 									
-									cliente.getContas().remove(conta);
+									
 									Clidao.update(cliente);
+									Condao.delete(conta);
 									System.out.println("Conta removida com sucesso.");
 								} else {
 									System.out.println("Conta não encontrada ou não pertence ao cliente.");
@@ -474,26 +489,26 @@ public class Application {
 			case 4:
 				
 				try {
-					IEntityDAO<Cliente> Clidao1 = new ClienteDAO(new ConexaoBancoHibernate());
+					IEntityDAO<Cliente> Clidao2 = new ClienteDAO(new ConexaoBancoHibernate());
 					
-					List<Cliente> clientes1 = Clidao1.findAll();
+					List<Cliente> clientes1 = Clidao2.findAll();
 					
 					System.out.println("Lista de Clientes:");
 					for (Cliente cliente : clientes1) {
-						System.out.println("ID: " + cliente.getId());
+			
 						System.out.println("Nome: " + cliente.getNome());
 						System.out.println("CPF: " + cliente.getCpf());
 						System.out.println("----------------------------------");
 					}
 					
 					System.out.println("Digite o ID do cliente que deseja excluir:");
-					int id = scanner.nextInt();
+					 cpf = scanner.next();
 					scanner.nextLine();
 					
-					Cliente cliente = Clidao1.findById(id);
+					Cliente cliente = Clidao2.findByCpf(cpf);
 					
 					if (cliente != null) {
-						Clidao1.delete(cliente);
+						Clidao2.delete(cliente);
 						System.out.println("Cliente excluído com sucesso");
 					} else {
 						System.out.println("Cliente não encontrado.");

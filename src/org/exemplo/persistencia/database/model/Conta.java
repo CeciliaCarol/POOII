@@ -194,7 +194,6 @@ public class Conta {
 			if (quantia.compareTo(BigDecimal.ZERO) > 0) {
 				if (this.saldo.compareTo(quantia) > 0) {
 					this.saldo = this.saldo.subtract(quantia);
-					transacoes.add(new RegistroTransacao(quantia, TipoTransacao.DEBITO, LocalDateTime.now()));
 					System.out.println("Saque realizado com sucesso!");
 				} else {
 					System.out.println("Saldo insuficiente");
@@ -213,10 +212,21 @@ public class Conta {
 			if (quantia.compareTo(BigDecimal.ZERO) < 0) {
 				System.out.println("Valor invalido para transferencia");
 			} else if (quantia.compareTo(saldo) <= 0) {
-				setSaldo(saldo.subtract(quantia));
+				BigDecimal taxa;
+				
+				if (tipoConta == TipoConta.CORRENTE) {
+					taxa = BigDecimal.valueOf(0.05);
+				} else if (tipoConta == TipoConta.POUPANCA) {
+				    taxa = BigDecimal.valueOf(0.02);   	  
+				} else {
+					taxa = BigDecimal.ZERO;
+				}
+				
+				BigDecimal valorTaxa = quantia.multiply(taxa);
+				
+				setSaldo(saldo.subtract(quantia).subtract(valorTaxa));
 				c.setSaldo(c.getSaldo().add(quantia));
-				c.transacoes.add(new RegistroTransacao(quantia, TipoTransacao.TRANSACAO_CREDITO, LocalDateTime.now()));
-				transacoes.add(new RegistroTransacao(quantia, TipoTransacao.TRANSACAO_DEBITO, LocalDateTime.now()));
+				
 			} else 
 				System.out.println("Saldo insuficiente para realizar transferencia.");
 			} else {

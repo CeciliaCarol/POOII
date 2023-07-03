@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.Objects;
 import java.util.Random;
 
@@ -34,7 +35,7 @@ public class RegistroTransacao  implements Serializable{
 	@Column(name = "tipo")
 	private TipoTransacao tipo;
 	@Column(name = "data")
-	private LocalDateTime data;
+	private YearMonth data;
 	
 	@ManyToOne
 	@JoinColumn(name = "conta_id")
@@ -44,7 +45,7 @@ public class RegistroTransacao  implements Serializable{
 		
 	}
 	
-	public RegistroTransacao(BigDecimal valor, TipoTransacao tipo, LocalDateTime data) {
+	public RegistroTransacao(BigDecimal valor, TipoTransacao tipo, YearMonth data) {
 		this.valor = valor;
 		this.tipo = tipo;
 		this.data = data;
@@ -74,11 +75,11 @@ public class RegistroTransacao  implements Serializable{
 		this.tipo = tipo;
 	}
 
-	public LocalDateTime getData() {
+	public YearMonth getData() {
 		return data;
 	}
 
-	public void setData(LocalDateTime data) {
+	public void setData(YearMonth data) {
 		this.data = data;
 	}
 
