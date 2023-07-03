@@ -105,7 +105,12 @@ public class Application {
 						        
 								
 								Conta conta = new Conta();
+<<<<<<< HEAD
 								conta.setDataAbertura(LocalDateTime.now());						
+=======
+							        conta.setStatus(true);
+								conta.setDataAbertura(LocalDateTime.now());
+>>>>>>> 0f6101a7a2db2b915cd6b00a61f24eb87ced93e4
 								conta.setSaldo(BigDecimal.ZERO);
 								conta.setStatus(true);
 								conta.setTipoConta(TipoConta.POUPANCA);
@@ -268,6 +273,10 @@ public class Application {
 										double quantia = scanner.nextDouble();
 										scanner.nextLine();
 										contaSelecionada.sacar(new BigDecimal(quantia));
+
+										IEntityDAO<RegistroTransacao> TransacaoDAO = new RegistroTransacaoDAO(new ConexaoBancoHibernate()); 
+										RegistroTransacao transacao = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.CREDITO, LocalDateTime.now());
+										transacao.setConta(contaSelecionada);
 										
 										IEntityDAO<RegistroTransacao> TransacaoDAO = new RegistroTransacaoDAO(new ConexaoBancoHibernate()); 
 										RegistroTransacao transacao = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.CREDITO, YearMonth.now());
@@ -276,7 +285,10 @@ public class Application {
 										IEntityDAO<Conta> Condao = new ContaDAO(new ConexaoBancoHibernate());
 										Condao.update(contaSelecionada);
 										TransacaoDAO.save(transacao);
+<<<<<<< HEAD
 										
+=======
+>>>>>>> 0f6101a7a2db2b915cd6b00a61f24eb87ced93e4
 										System.out.println("Saque realizado com sucesso");
 									} else {
 										System.out.println("Conta não encontrada.");
