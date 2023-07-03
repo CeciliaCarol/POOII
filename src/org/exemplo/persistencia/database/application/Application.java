@@ -104,7 +104,8 @@ public class Application {
 						        IEntityDAO<Cliente> Clidao1 = new ClienteDAO(new ConexaoBancoHibernate());
 								
 								Conta conta = new Conta();
-								conta.setNumeroconta(new Random().nextInt(999999999));						
+							        conta.setStatus(true);
+								conta.setDataAbertura(LocalDateTime.now());
 								conta.setSaldo(BigDecimal.ZERO);
 								conta.setTipoConta(TipoConta.POUPANCA);
 								
