@@ -267,10 +267,14 @@ public class Application {
 										double quantia = scanner.nextDouble();
 										scanner.nextLine();
 										contaSelecionada.sacar(new BigDecimal(quantia));
+
+										IEntityDAO<RegistroTransacao> TransacaoDAO = new RegistroTransacaoDAO(new ConexaoBancoHibernate()); 
+										RegistroTransacao transacao = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.CREDITO, LocalDateTime.now());
+										transacao.setConta(contaSelecionada);
 										
 										IEntityDAO<Conta> Condao = new ContaDAO(new ConexaoBancoHibernate());
 										Condao.update(contaSelecionada);
-										
+										TransacaoDAO.save(transacao);
 										System.out.println("Saque realizado com sucesso");
 									} else {
 										System.out.println("Conta não encontrada.");
