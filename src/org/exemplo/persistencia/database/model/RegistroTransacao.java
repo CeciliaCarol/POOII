@@ -21,6 +21,8 @@ import javax.persistence.Table;
 
 import org.exemplo.persistencia.database.enumeration.TipoTransacao;
 
+import net.bytebuddy.asm.Advice.Local;
+
 @javax.persistence.Entity
 @Table(name = "registro_transacao")
 public class RegistroTransacao  implements Serializable{
@@ -35,7 +37,7 @@ public class RegistroTransacao  implements Serializable{
 	@Column(name = "tipo")
 	private TipoTransacao tipo;
 	@Column(name = "data")
-	private YearMonth data;
+	private LocalDateTime data;
 	
 	@ManyToOne
 	@JoinColumn(name = "conta_id")
@@ -45,7 +47,7 @@ public class RegistroTransacao  implements Serializable{
 		
 	}
 	
-	public RegistroTransacao(BigDecimal valor, TipoTransacao tipo, YearMonth data) {
+	public RegistroTransacao(BigDecimal valor, TipoTransacao tipo, LocalDateTime data) {
 		this.valor = valor;
 		this.tipo = tipo;
 		this.data = data;
@@ -75,11 +77,11 @@ public class RegistroTransacao  implements Serializable{
 		this.tipo = tipo;
 	}
 
-	public YearMonth getData() {
+	public LocalDateTime getData() {
 		return data;
 	}
 
-	public void setData(YearMonth data) {
+	public void setData(LocalDateTime data) {
 		this.data = data;
 	}
 

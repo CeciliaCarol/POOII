@@ -8,7 +8,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.exemplo.persistencia.database.db.IConnection;
+import org.exemplo.persistencia.database.model.Cliente;
 import org.exemplo.persistencia.database.model.Conta;
+import org.exemplo.persistencia.database.model.RegistroTransacao;
 import org.hibernate.Session;
 
 public class ContaDAO implements IEntityDAO<Conta> {
@@ -19,7 +21,7 @@ public class ContaDAO implements IEntityDAO<Conta> {
 		this.conn = conn;
 	}
 
-	@Override
+	
 	public void save(Conta t) {
 		Session session = conn.getSessionFactory().openSession();
 		session.beginTransaction();
@@ -28,13 +30,13 @@ public class ContaDAO implements IEntityDAO<Conta> {
 		session.close();
 	}
 
-	@Override
+	
 	public Conta findById(Integer id) {
 		Session session = conn.getSessionFactory().openSession();
 		return session.find(Conta.class, id);
 	}
 
-	@Override
+	
 	public void update(Conta t) {
 		// TODO Auto-generated method stub
 		Session session = conn.getSessionFactory().openSession();
@@ -44,17 +46,17 @@ public class ContaDAO implements IEntityDAO<Conta> {
 		session.close();
 	}
 
-	@Override
+	
 	public void delete(Conta t) {
-		// TODO Auto-generated method stub
-		Session session = conn.getSessionFactory().openSession();
+	    Session session = conn.getSessionFactory().openSession(); 
 		session.beginTransaction();
 		session.delete(t);
 		session.getTransaction().commit();
 		session.close();
+		
 	}
 
-	@Override
+	
 	public List<Conta> findAll() {
 		
 		Session session = conn.getSessionFactory().openSession();
@@ -65,7 +67,7 @@ public class ContaDAO implements IEntityDAO<Conta> {
         return session.createQuery(query).getResultList();
 	}
 
-	@Override
+	
 	public Conta findByCpf(String cpf) {
 		// TODO Auto-generated method stub
 		return null;

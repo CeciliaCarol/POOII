@@ -102,15 +102,8 @@ public class Application {
 						
 							try {
 								IEntityDAO<Conta> Condao = new ContaDAO(new ConexaoBancoHibernate());
-						        
-								
 								Conta conta = new Conta();
-<<<<<<< HEAD
-								conta.setDataAbertura(LocalDateTime.now());						
-=======
-							        conta.setStatus(true);
 								conta.setDataAbertura(LocalDateTime.now());
->>>>>>> 0f6101a7a2db2b915cd6b00a61f24eb87ced93e4
 								conta.setSaldo(BigDecimal.ZERO);
 								conta.setStatus(true);
 								conta.setTipoConta(TipoConta.POUPANCA);
@@ -220,7 +213,7 @@ public class Application {
 										contaSelecionada.depositar(new BigDecimal(quantia));
 										
 										IEntityDAO<RegistroTransacao> TransacaoDAO = new RegistroTransacaoDAO(new ConexaoBancoHibernate()); 
-										RegistroTransacao transacao = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.CREDITO, YearMonth.now());
+										RegistroTransacao transacao = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.CREDITO, LocalDateTime.now());
 										transacao.setConta(contaSelecionada);
 										
 										
@@ -273,22 +266,18 @@ public class Application {
 										double quantia = scanner.nextDouble();
 										scanner.nextLine();
 										contaSelecionada.sacar(new BigDecimal(quantia));
-
-										IEntityDAO<RegistroTransacao> TransacaoDAO = new RegistroTransacaoDAO(new ConexaoBancoHibernate()); 
-										RegistroTransacao transacao = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.CREDITO, LocalDateTime.now());
-										transacao.setConta(contaSelecionada);
 										
 										IEntityDAO<RegistroTransacao> TransacaoDAO = new RegistroTransacaoDAO(new ConexaoBancoHibernate()); 
-										RegistroTransacao transacao = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.CREDITO, YearMonth.now());
+										RegistroTransacao transacao = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.CREDITO, LocalDateTime.now());
 										transacao.setConta(contaSelecionada);
 										
 										IEntityDAO<Conta> Condao = new ContaDAO(new ConexaoBancoHibernate());
 										Condao.update(contaSelecionada);
 										TransacaoDAO.save(transacao);
-<<<<<<< HEAD
+
 										
-=======
->>>>>>> 0f6101a7a2db2b915cd6b00a61f24eb87ced93e4
+
+
 										System.out.println("Saque realizado com sucesso");
 									} else {
 										System.out.println("Conta não encontrada.");
@@ -336,13 +325,15 @@ public class Application {
 							        	contaOrigem.transferir(contaDestino, new BigDecimal(quantia));
 							        	
 							        	IEntityDAO<RegistroTransacao> TransacaoDAO = new RegistroTransacaoDAO(new ConexaoBancoHibernate()); 
-										RegistroTransacao transacao = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.CREDITO, YearMonth.now());
+										RegistroTransacao transacao = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.TRANSACAO_CREDITO, LocalDateTime.now());
 										transacao.setConta(contaOrigem);
-							        	transacao.setConta(contaDestino);
+										TransacaoDAO.save(transacao);
+										RegistroTransacao transacao2 = new RegistroTransacao(BigDecimal.valueOf(quantia), TipoTransacao.TRANSACAO_DEBITO, LocalDateTime.now());
+							        	transacao2.setConta(contaDestino);
+							        	TransacaoDAO.save(transacao2);
 										
 							        	Condao.update(contaOrigem);
 							        	Condao.update(contaDestino);
-							        	TransacaoDAO.save(transacao);
 							        	
 							        	System.out.println("Transferencia realizada com sucesso");
 							        	

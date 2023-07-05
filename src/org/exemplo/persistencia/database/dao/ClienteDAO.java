@@ -54,7 +54,7 @@ public class ClienteDAO implements IEntityDAO<Cliente>{
 		return temp;
 	}
 
-	@Override
+	
 	public List<Cliente> findAll() {
 		Session session = conn.getSessionFactory().openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -64,7 +64,7 @@ public class ClienteDAO implements IEntityDAO<Cliente>{
         return session.createQuery(query).getResultList();
 	}
 
-	@Override
+	
 	public Cliente findByCpf(String cpf) {
 		Session session = conn.getSessionFactory().openSession();
 		String hql = "FROM Cliente WHERE cpf = :cpf";
